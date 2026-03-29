@@ -546,6 +546,13 @@ button:active {
 	color: #ffd893;
 }
 
+.status-text {
+	margin-top: var(--space-xs);
+	color: var(--muted);
+	font-size: 0.86rem;
+	line-height: 1.4;
+}
+
 .metric-grid {
 	display: grid;
 	grid-template-columns: 1fr auto;
@@ -573,6 +580,37 @@ button:active {
 	overflow-x: auto;
 	font-size: 0.86rem;
 	font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+#bitonic-pseudocode {
+	display: grid;
+	gap: 0.2rem;
+	line-height: 1.32;
+}
+
+.bitonic-pseudocode-line {
+	display: grid;
+	grid-template-columns: 2rem minmax(0, 1fr);
+	gap: 0.4rem;
+	padding: 0.12rem 0.32rem;
+	border-radius: 0.35rem;
+	transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.bitonic-pseudocode-line .line-no {
+	color: rgba(159, 180, 202, 0.84);
+	text-align: right;
+	user-select: none;
+}
+
+.bitonic-pseudocode-line.is-active {
+	background: rgba(34, 184, 207, 0.16);
+	color: #ebf8ff;
+	outline: 1px solid rgba(34, 184, 207, 0.36);
+}
+
+.bitonic-pseudocode-line.is-active .line-no {
+	color: #98e7f0;
 }
 
 .explanation-card p {
@@ -617,6 +655,19 @@ tbody tr:last-child td {
 	border-bottom: none;
 }
 
+#bitonic-history-body tr.is-clickable {
+	cursor: pointer;
+	transition: background var(--transition-fast);
+}
+
+#bitonic-history-body tr.is-clickable:hover {
+	background: rgba(34, 184, 207, 0.1);
+}
+
+#bitonic-history-body tr.is-active {
+	background: rgba(78, 124, 255, 0.16);
+}
+
 .collapsible-card {
 	overflow: hidden;
 }
@@ -650,6 +701,26 @@ tbody tr:last-child td {
 	font-size: 0.92rem;
 }
 
+.card-helper {
+	color: var(--muted);
+	font-size: 0.88rem;
+	line-height: 1.42;
+	margin-bottom: var(--space-sm);
+}
+
+.compact-group {
+	margin-bottom: var(--space-sm);
+}
+
+#bitonic-zero-one-result,
+#bitonic-comparison-text,
+#bitonic-worst-case-explanation {
+	margin-top: var(--space-sm);
+	color: #c8dbef;
+	font-size: 0.87rem;
+	line-height: 1.45;
+}
+
 .key-concepts-card ul {
 	margin: 0;
 	color: #c7daee;
@@ -681,6 +752,17 @@ tbody tr:last-child td {
 	font-size: 0.92rem;
 }
 
+.bitonic-visual-action {
+	margin-top: 0.32rem;
+	padding: 0.44rem 0.62rem;
+	border-radius: 0.55rem;
+	border: 1px solid rgba(34, 184, 207, 0.34);
+	background: rgba(17, 35, 52, 0.78);
+	color: #d8edff;
+	font-size: 0.88rem;
+	line-height: 1.35;
+}
+
 .svg-placeholder {
 	margin-top: 0;
 	border-radius: var(--radius-md);
@@ -695,6 +777,211 @@ tbody tr:last-child td {
 	width: 100%;
 	height: 100%;
 	min-height: 0;
+}
+
+#bitonic-svg {
+	font-family: "IBM Plex Sans", "Manrope", "Segoe UI", sans-serif;
+}
+
+#bitonic-svg .stage-band {
+	fill: rgba(120, 154, 187, 0.045);
+}
+
+#bitonic-svg .stage-band.current {
+	fill: rgba(34, 184, 207, 0.22);
+	stroke: rgba(34, 184, 207, 0.42);
+	stroke-width: 1;
+}
+
+#bitonic-svg .stage-band.future {
+	fill: rgba(94, 128, 168, 0.07);
+}
+
+#bitonic-svg .bitonic-wire {
+	stroke: rgba(138, 160, 184, 0.5);
+	stroke-width: 2;
+}
+
+#bitonic-svg .bitonic-wire.current {
+	stroke: rgba(34, 184, 207, 0.95);
+	stroke-width: 2.6;
+}
+
+#bitonic-svg .bitonic-wire.done {
+	stroke: rgba(80, 209, 153, 0.56);
+}
+
+#bitonic-svg .bitonic-wire.subtle {
+	stroke: rgba(130, 151, 174, 0.28);
+}
+
+#bitonic-svg .bitonic-comparator {
+	stroke: rgba(113, 143, 174, 0.44);
+	stroke-width: 2;
+}
+
+#bitonic-svg .bitonic-comparator.done {
+	stroke: rgba(80, 209, 153, 0.74);
+	stroke-width: 2.2;
+}
+
+#bitonic-svg .bitonic-comparator.active {
+	stroke: rgba(34, 184, 207, 0.98);
+	stroke-width: 4.4;
+	stroke-linecap: round;
+}
+
+#bitonic-svg .bitonic-comparator.muted {
+	stroke: rgba(102, 130, 157, 0.22);
+}
+
+#bitonic-svg .bitonic-comparator.swap {
+	stroke: rgba(239, 102, 102, 0.96);
+}
+
+#bitonic-svg .bitonic-comparator-glow {
+	stroke: rgba(34, 184, 207, 0.26);
+	stroke-width: 10;
+	stroke-linecap: round;
+	filter: blur(2px);
+}
+
+#bitonic-svg .bitonic-comparator-glow.swap {
+	stroke: rgba(239, 102, 102, 0.28);
+}
+
+#bitonic-svg .bitonic-pin {
+	fill: rgba(11, 19, 30, 0.96);
+	stroke: rgba(126, 162, 196, 0.52);
+	stroke-width: 1.2;
+}
+
+#bitonic-svg .bitonic-pin.active {
+	fill: rgba(34, 184, 207, 0.52);
+	stroke: rgba(195, 247, 255, 0.98);
+	stroke-width: 1.8;
+}
+
+#bitonic-svg .bitonic-pin.swap {
+	fill: rgba(239, 102, 102, 0.55);
+	stroke: rgba(255, 222, 222, 0.95);
+	stroke-width: 1.8;
+}
+
+#bitonic-svg .wire-label {
+	fill: rgba(210, 228, 246, 0.96);
+	font-size: 13px;
+	font-weight: 700;
+}
+
+#bitonic-svg .stage-label {
+	fill: rgba(215, 233, 250, 0.88);
+	font-size: 14px;
+	font-weight: 680;
+}
+
+#bitonic-svg .stage-label.current {
+	fill: rgba(193, 245, 255, 0.98);
+}
+
+#bitonic-svg .stage-subtitle {
+	fill: rgba(168, 213, 235, 0.92);
+	font-size: 12px;
+	font-weight: 560;
+}
+
+#bitonic-svg .axis-caption {
+	fill: rgba(168, 205, 237, 0.9);
+	font-size: 12px;
+	font-weight: 640;
+}
+
+#bitonic-svg .input-value,
+#bitonic-svg .output-value {
+	fill: #ecf6ff;
+	font-size: 13px;
+	font-weight: 690;
+}
+
+#bitonic-svg .value-tag-bg {
+	fill: rgba(11, 22, 34, 0.85);
+	stroke: rgba(121, 160, 195, 0.36);
+	stroke-width: 1;
+}
+
+#bitonic-svg .value-tag-bg.input {
+	fill: rgba(16, 30, 46, 0.9);
+}
+
+#bitonic-svg .value-tag-bg.output {
+	fill: rgba(15, 31, 42, 0.92);
+}
+
+#bitonic-svg .value-tag-bg.output.done {
+	fill: rgba(31, 77, 62, 0.72);
+	stroke: rgba(88, 220, 165, 0.5);
+}
+
+#bitonic-svg .moving-token {
+	fill: rgba(34, 184, 207, 0.28);
+	stroke: rgba(91, 220, 240, 0.96);
+	stroke-width: 1.5;
+}
+
+#bitonic-svg .moving-token-text {
+	fill: #ebf8ff;
+	font-size: 12px;
+	font-weight: 700;
+	text-anchor: middle;
+	dominant-baseline: middle;
+}
+
+#bitonic-svg .active-value-chip-bg {
+	fill: rgba(13, 30, 46, 0.96);
+	stroke: rgba(34, 184, 207, 0.66);
+	stroke-width: 1.2;
+}
+
+#bitonic-svg .active-value-chip-bg.swap {
+	stroke: rgba(239, 102, 102, 0.8);
+}
+
+#bitonic-svg .active-value-chip-title {
+	fill: rgba(176, 221, 246, 0.95);
+	font-size: 11px;
+	font-weight: 620;
+}
+
+#bitonic-svg .active-value-chip-main {
+	fill: #f0fbff;
+	font-size: 14px;
+	font-weight: 720;
+}
+
+#bitonic-svg .active-value-chip-detail {
+	fill: rgba(186, 228, 246, 0.95);
+	font-size: 11px;
+	font-weight: 620;
+}
+
+#bitonic-svg .active-value-chip-detail.swap {
+	fill: rgba(255, 204, 204, 0.96);
+}
+
+#bitonic-svg .group-overlay {
+	fill: rgba(80, 122, 166, 0.09);
+	stroke: rgba(106, 152, 197, 0.26);
+	stroke-width: 1;
+}
+
+#bitonic-svg .group-overlay.alt {
+	fill: rgba(32, 162, 186, 0.1);
+}
+
+#bitonic-svg .group-label {
+	fill: rgba(173, 219, 240, 0.84);
+	font-size: 10px;
+	font-weight: 620;
 }
 
 .svg-placeholder rect {
@@ -765,6 +1052,14 @@ tbody tr:last-child td {
 
 .swatch-swap {
 	background: rgba(78, 124, 255, 0.82);
+}
+
+.swatch-stage {
+	background: rgba(34, 184, 207, 0.45);
+}
+
+.swatch-sorted {
+	background: rgba(80, 209, 153, 0.7);
 }
 
 @media (max-width: 1260px) {
