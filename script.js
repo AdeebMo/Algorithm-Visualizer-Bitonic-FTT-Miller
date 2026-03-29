@@ -3,9 +3,27 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const tabButtons = Array.from(document.querySelectorAll(".tab-button[data-target]"));
 	const sections = Array.from(document.querySelectorAll(".algorithm-section"));
+	const landingView = document.getElementById("landing-overview");
 	const workspace = document.getElementById("algorithm-workspace");
+	const workspaceHeading = document.getElementById("workspace-heading");
+	const workspaceContext = document.getElementById("workspace-context");
 
-	if (!workspace || tabButtons.length === 0 || sections.length === 0) {
+	const sectionMeta = {
+		"bitonic-section": {
+			title: "Bitonic Sorting Network",
+			context: "Explore deterministic compare-and-exchange layers in a structured sorting network.",
+		},
+		"fft-section": {
+			title: "Efficient FFT Circuits",
+			context: "Trace butterfly stages and frequency-flow structure in fast transform circuits.",
+		},
+		"miller-rabin-section": {
+			title: "Miller-Rabin Primality Testing",
+			context: "Study witness rounds and confidence progression in probabilistic primality checks.",
+		},
+	};
+
+	if (!landingView || !workspace || tabButtons.length === 0 || sections.length === 0) {
 		return;
 	}
 
@@ -27,9 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function showOverview() {
 		hideAllSections();
+		landingView.hidden = false;
+		landingView.setAttribute("aria-hidden", "false");
 		workspace.hidden = true;
 		workspace.setAttribute("aria-hidden", "true");
 		setActiveTab(null);
+		document.body.classList.remove("workspace-open");
+
+		if (workspaceHeading) {
+			workspaceHeading.textContent = "Select an algorithm to begin";
+		}
+
+		if (workspaceContext) {
+			workspaceContext.textContent = "Use the tabs above to open one visualization workspace at a time.";
+		}
 	}
 
 	function showSection(sectionId) {
@@ -38,8 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			return;
 		}
 
+		const wasWorkspaceHidden = workspace.hidden;
+
+		landingView.hidden = true;
+		landingView.setAttribute("aria-hidden", "true");
 		workspace.hidden = false;
 		workspace.setAttribute("aria-hidden", "false");
+		document.body.classList.add("workspace-open");
 
 		sections.forEach((section) => {
 			const isTarget = section.id === sectionId;
@@ -49,6 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 
 		setActiveTab(sectionId);
+
+		if (workspaceHeading && sectionMeta[sectionId]) {
+			workspaceHeading.textContent = sectionMeta[sectionId].title;
+		}
+
+		if (workspaceContext && sectionMeta[sectionId]) {
+			workspaceContext.textContent = sectionMeta[sectionId].context;
+		}
+
+		if (wasWorkspaceHidden && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			workspace.scrollIntoView({ behavior: "smooth", block: "start" });
+		}
 	}
 
 	tabButtons.forEach((button) => {

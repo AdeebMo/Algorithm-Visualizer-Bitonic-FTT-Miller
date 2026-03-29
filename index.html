@@ -9,14 +9,22 @@
 	<script src="script.js" defer></script>
 </head>
 <body>
-	<a class="skip-link" href="#main-content">Skip to main content</a>
 
-	<header id="landing-overview" class="top-header" role="banner">
+	<header id="landing-overview" class="top-header landing-view" role="banner" aria-hidden="false">
 		<div class="header-content">
 			<p class="header-kicker">Interactive Algorithm Studio</p>
 			<h1>Algorithm Visualizer</h1>
 			<p class="header-subtitle">Explore network sorting, fast transforms, and probabilistic primality testing through clear, guided visual workflows.</p>
 		</div>
+
+		<section class="landing-instructions" aria-label="How to use this visualizer">
+			<h3>How to Use This Visualizer</h3>
+			<p>Select one algorithm to enter a dedicated visualization workspace.</p>
+			<ul class="landing-helper-list">
+				<li>Use controls, pseudocode, and visual panels together to understand each algorithm step by step.</li>
+				<li>Return to the overview at any time to switch topics.</li>
+			</ul>
+		</section>
 
 		<nav class="algorithm-tabs" aria-label="Algorithm tabs">
 			<div class="tab-list" role="tablist" aria-label="Choose an algorithm to view">
@@ -60,8 +68,17 @@
 		</nav>
 	</header>
 
-	<main id="main-content" class="app-main" role="main">
-		<section id="algorithm-workspace" class="algorithm-workspace" aria-label="Algorithm workspace" hidden aria-hidden="true">
+	<main id="main-content" class="app-main" role="main" tabindex="-1">
+		<section id="algorithm-workspace" class="algorithm-workspace workspace-view" aria-label="Algorithm workspace" hidden aria-hidden="true">
+			<section class="workspace-toolbar card" aria-label="Workspace context">
+				<button type="button" class="back-overview-button" data-action="back-to-overview">Back to Main Menu</button>
+				<div class="workspace-copy">
+					<p class="workspace-kicker">Focused Workspace</p>
+					<h2 id="workspace-heading">Select an algorithm to begin</h2>
+					<p id="workspace-context">Use the tabs above to open one visualization workspace at a time.</p>
+				</div>
+			</section>
+
 		<section
 			id="bitonic-section"
 			class="algorithm-section"
