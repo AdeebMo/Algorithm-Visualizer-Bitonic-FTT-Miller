@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Educational visualizer shell for Bitonic Sorting Networks, Efficient FFT Circuits, and Miller-Rabin Primality Testing.">
+	<title>Algorithm Visualizer | Bitonic, FFT, Miller-Rabin</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js" defer></script>
+</head>
+<body>
+	<a class="skip-link" href="#main-content">Skip to main content</a>
+
+	<header id="landing-overview" class="top-header" role="banner">
+		<div class="header-content">
+			<p class="header-kicker">Interactive Algorithm Studio</p>
+			<h1>Algorithm Visualizer</h1>
+			<p class="header-subtitle">Explore network sorting, fast transforms, and probabilistic primality testing through clear, guided visual workflows.</p>
+		</div>
+
+		<nav class="algorithm-tabs" aria-label="Algorithm tabs">
+			<div class="tab-list" role="tablist" aria-label="Choose an algorithm to view">
+				<button
+					id="tab-bitonic"
+					class="tab-button"
+					type="button"
+					role="tab"
+					aria-selected="false"
+					aria-controls="bitonic-section"
+					data-target="bitonic-section"
+					tabindex="0"
+				>
+					Bitonic Sorting Network
+				</button>
+				<button
+					id="tab-fft"
+					class="tab-button"
+					type="button"
+					role="tab"
+					aria-selected="false"
+					aria-controls="fft-section"
+					data-target="fft-section"
+					tabindex="0"
+				>
+					Efficient FFT Circuits
+				</button>
+				<button
+					id="tab-miller-rabin"
+					class="tab-button"
+					type="button"
+					role="tab"
+					aria-selected="false"
+					aria-controls="miller-rabin-section"
+					data-target="miller-rabin-section"
+					tabindex="0"
+				>
+					Miller-Rabin Primality Testing
+				</button>
+			</div>
+		</nav>
+	</header>
+
+	<main id="main-content" class="app-main" role="main">
+		<section id="algorithm-workspace" class="algorithm-workspace" aria-label="Algorithm workspace" hidden aria-hidden="true">
+		<section
+			id="bitonic-section"
+			class="algorithm-section"
+			role="tabpanel"
+			aria-labelledby="tab-bitonic"
+			data-algorithm="bitonic"
+			hidden
+			aria-hidden="true"
+		>
+			<div class="algorithm-shell">
+				<aside class="control-panel" aria-label="Bitonic controls and educational notes">
+					<section class="card intro-card">
+						<h2>Bitonic Sorting Network</h2>
+						<p>Configure a sequence, inspect fixed comparator layers, and study deterministic data-independent sorting flows.</p>
+					</section>
+
+					<section class="card controls-card" aria-label="Bitonic controls">
+						<h3>Controls</h3>
+
+						<div class="control-group">
+							<label for="bitonic-custom-input">Custom input</label>
+							<textarea id="bitonic-custom-input" name="bitonic-custom-input" rows="3" placeholder="Example: 8, 3, 6, 1, 4, 7, 2, 5"></textarea>
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Preset examples</p>
+							<div class="preset-buttons" role="group" aria-label="Bitonic preset examples">
+								<button type="button" id="bitonic-preset-balanced">Balanced 8-Value Set</button>
+								<button type="button" id="bitonic-preset-nearly-sorted">Nearly Sorted 16-Value Set</button>
+								<button type="button" id="bitonic-preset-reverse">Reverse Ordered Set</button>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label for="bitonic-speed-slider">Speed</label>
+							<input type="range" id="bitonic-speed-slider" name="bitonic-speed-slider" min="1" max="100" value="60">
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Playback</p>
+							<div class="playback-buttons" role="group" aria-label="Bitonic playback controls">
+								<button type="button" id="bitonic-build-btn">Build Steps</button>
+								<button type="button" id="bitonic-step-btn">Step</button>
+								<button type="button" id="bitonic-play-btn">Play</button>
+								<button type="button" id="bitonic-pause-btn">Pause</button>
+								<button type="button" id="bitonic-reset-btn">Reset</button>
+							</div>
+						</div>
+
+						<div class="status-row" aria-label="Bitonic run status">
+							<span class="status-badge" id="bitonic-status-badge" aria-live="polite">Idle</span>
+							<span class="step-counter" id="bitonic-step-counter" aria-live="polite">Step 0 / 0</span>
+						</div>
+					</section>
+
+					<section class="card counters-card" aria-labelledby="bitonic-counters-title">
+						<h3 id="bitonic-counters-title">Live Counters</h3>
+						<dl class="metric-grid" id="bitonic-live-counters">
+							<dt>Comparators</dt>
+							<dd id="bitonic-counter-comparators">0</dd>
+							<dt>Swaps</dt>
+							<dd id="bitonic-counter-swaps">0</dd>
+							<dt>Layer</dt>
+							<dd id="bitonic-counter-layer">0</dd>
+						</dl>
+					</section>
+
+					<section class="card pseudocode-card" aria-labelledby="bitonic-pseudocode-title">
+						<h3 id="bitonic-pseudocode-title">Pseudocode</h3>
+						<pre id="bitonic-pseudocode" aria-live="polite">Pseudocode will appear when the Bitonic module is connected.</pre>
+					</section>
+
+					<section class="card explanation-card" aria-labelledby="bitonic-explanation-title">
+						<h3 id="bitonic-explanation-title">Step Explanation</h3>
+						<p id="bitonic-step-explanation" aria-live="polite">Build steps to begin the guided explanation.</p>
+					</section>
+
+					<section class="card history-card" aria-labelledby="bitonic-history-title">
+						<h3 id="bitonic-history-title">History Table</h3>
+						<div class="table-wrap">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Step</th>
+										<th scope="col">Operation</th>
+										<th scope="col">State Snapshot</th>
+									</tr>
+								</thead>
+								<tbody id="bitonic-history-body">
+									<tr>
+										<td colspan="3">No events recorded yet.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+					<details class="card collapsible-card" id="bitonic-overview-card" open>
+						<summary>Overview</summary>
+						<p>Bitonic sorting networks use predetermined compare-and-exchange stages that map well to parallel hardware models.</p>
+					</details>
+
+					<details class="card collapsible-card" id="bitonic-example-card">
+						<summary>Worked Example</summary>
+						<p>Select a preset and build steps to inspect each layer transformation from unsorted input to sorted output.</p>
+					</details>
+
+					<section class="card key-concepts-card" aria-labelledby="bitonic-concepts-title">
+						<h3 id="bitonic-concepts-title">Key Concepts</h3>
+						<ul>
+							<li>Bitonic sequence construction</li>
+							<li>Comparator layer scheduling</li>
+							<li>Parallel depth versus total comparators</li>
+						</ul>
+					</section>
+				</aside>
+
+				<section class="visualization-panel" aria-label="Bitonic visualization panel">
+					<article class="card visualization-card">
+						<header class="visualization-header">
+							<h3>Visualization</h3>
+							<p>Bitonic network canvas and stage-by-stage visual state.</p>
+						</header>
+
+						<div class="svg-placeholder" aria-label="Bitonic SVG area">
+							<svg id="bitonic-svg" viewBox="0 0 960 560" role="img" aria-labelledby="bitonic-svg-title bitonic-svg-desc">
+								<title id="bitonic-svg-title">Bitonic sorting network placeholder</title>
+								<desc id="bitonic-svg-desc">Reserved drawing surface for the Bitonic sorting network visualization.</desc>
+								<rect x="0" y="0" width="960" height="560"></rect>
+								<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">Bitonic SVG Placeholder</text>
+							</svg>
+						</div>
+
+						<section class="legend-area" aria-label="Bitonic legend">
+							<h4>Legend</h4>
+							<ul>
+								<li><span class="legend-swatch swatch-idle" aria-hidden="true"></span>Idle wire</li>
+								<li><span class="legend-swatch swatch-active" aria-hidden="true"></span>Active comparator</li>
+								<li><span class="legend-swatch swatch-swap" aria-hidden="true"></span>Swap event</li>
+							</ul>
+						</section>
+					</article>
+				</section>
+			</div>
+		</section>
+
+		<section
+			id="fft-section"
+			class="algorithm-section"
+			role="tabpanel"
+			aria-labelledby="tab-fft"
+			data-algorithm="fft"
+			hidden
+			aria-hidden="true"
+		>
+			<div class="algorithm-shell">
+				<aside class="control-panel" aria-label="FFT controls and educational notes">
+					<section class="card intro-card">
+						<h2>Efficient FFT Circuits</h2>
+						<p>Inspect staged butterfly layouts, twiddle-factor flow, and structural complexity in fast transform circuits.</p>
+					</section>
+
+					<section class="card controls-card" aria-label="FFT controls">
+						<h3>Controls</h3>
+
+						<div class="control-group">
+							<label for="fft-custom-input">Custom input</label>
+							<textarea id="fft-custom-input" name="fft-custom-input" rows="3" placeholder="Example: 1+0i, 0+1i, -1+0i, 0-1i"></textarea>
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Preset examples</p>
+							<div class="preset-buttons" role="group" aria-label="FFT preset examples">
+								<button type="button" id="fft-preset-impulse">Impulse Signal</button>
+								<button type="button" id="fft-preset-sine">Single Tone Signal</button>
+								<button type="button" id="fft-preset-mixed">Mixed Frequency Signal</button>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label for="fft-speed-slider">Speed</label>
+							<input type="range" id="fft-speed-slider" name="fft-speed-slider" min="1" max="100" value="60">
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Playback</p>
+							<div class="playback-buttons" role="group" aria-label="FFT playback controls">
+								<button type="button" id="fft-build-btn">Build Steps</button>
+								<button type="button" id="fft-step-btn">Step</button>
+								<button type="button" id="fft-play-btn">Play</button>
+								<button type="button" id="fft-pause-btn">Pause</button>
+								<button type="button" id="fft-reset-btn">Reset</button>
+							</div>
+						</div>
+
+						<div class="status-row" aria-label="FFT run status">
+							<span class="status-badge" id="fft-status-badge" aria-live="polite">Idle</span>
+							<span class="step-counter" id="fft-step-counter" aria-live="polite">Step 0 / 0</span>
+						</div>
+					</section>
+
+					<section class="card counters-card" aria-labelledby="fft-counters-title">
+						<h3 id="fft-counters-title">Live Counters</h3>
+						<dl class="metric-grid" id="fft-live-counters">
+							<dt>Butterflies</dt>
+							<dd id="fft-counter-butterflies">0</dd>
+							<dt>Stage</dt>
+							<dd id="fft-counter-stage">0</dd>
+							<dt>Complex Ops</dt>
+							<dd id="fft-counter-ops">0</dd>
+						</dl>
+					</section>
+
+					<section class="card pseudocode-card" aria-labelledby="fft-pseudocode-title">
+						<h3 id="fft-pseudocode-title">Pseudocode</h3>
+						<pre id="fft-pseudocode" aria-live="polite">Pseudocode will appear when the FFT module is connected.</pre>
+					</section>
+
+					<section class="card explanation-card" aria-labelledby="fft-explanation-title">
+						<h3 id="fft-explanation-title">Step Explanation</h3>
+						<p id="fft-step-explanation" aria-live="polite">Build steps to begin the guided explanation.</p>
+					</section>
+
+					<section class="card history-card" aria-labelledby="fft-history-title">
+						<h3 id="fft-history-title">History Table</h3>
+						<div class="table-wrap">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Step</th>
+										<th scope="col">Operation</th>
+										<th scope="col">State Snapshot</th>
+									</tr>
+								</thead>
+								<tbody id="fft-history-body">
+									<tr>
+										<td colspan="3">No events recorded yet.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+					<details class="card collapsible-card" id="fft-overview-card" open>
+						<summary>Overview</summary>
+						<p>FFT circuits reduce transform complexity by recursively decomposing frequency analysis into butterfly operations.</p>
+					</details>
+
+					<details class="card collapsible-card" id="fft-example-card">
+						<summary>Worked Example</summary>
+						<p>Pick a signal preset and build the staged path to trace how time-domain inputs map into frequency bins.</p>
+					</details>
+
+					<section class="card key-concepts-card" aria-labelledby="fft-concepts-title">
+						<h3 id="fft-concepts-title">Key Concepts</h3>
+						<ul>
+							<li>Butterfly graph structure</li>
+							<li>Twiddle factor scheduling</li>
+							<li>Computational complexity reduction</li>
+						</ul>
+					</section>
+				</aside>
+
+				<section class="visualization-panel" aria-label="FFT visualization panel">
+					<article class="card visualization-card">
+						<header class="visualization-header">
+							<h3>Visualization</h3>
+							<p>FFT circuit graph and staged computational flow.</p>
+						</header>
+
+						<div class="svg-placeholder" aria-label="FFT SVG area">
+							<svg id="fft-svg" viewBox="0 0 960 560" role="img" aria-labelledby="fft-svg-title fft-svg-desc">
+								<title id="fft-svg-title">FFT circuit placeholder</title>
+								<desc id="fft-svg-desc">Reserved drawing surface for the FFT circuit visualization.</desc>
+								<rect x="0" y="0" width="960" height="560"></rect>
+								<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">FFT SVG Placeholder</text>
+							</svg>
+						</div>
+
+						<section class="legend-area" aria-label="FFT legend">
+							<h4>Legend</h4>
+							<ul>
+								<li><span class="legend-swatch swatch-idle" aria-hidden="true"></span>Idle node</li>
+								<li><span class="legend-swatch swatch-active" aria-hidden="true"></span>Active butterfly</li>
+								<li><span class="legend-swatch swatch-swap" aria-hidden="true"></span>Highlighted flow</li>
+							</ul>
+						</section>
+					</article>
+				</section>
+			</div>
+		</section>
+
+		<section
+			id="miller-rabin-section"
+			class="algorithm-section"
+			role="tabpanel"
+			aria-labelledby="tab-miller-rabin"
+			data-algorithm="miller-rabin"
+			hidden
+			aria-hidden="true"
+		>
+			<div class="algorithm-shell">
+				<aside class="control-panel" aria-label="Miller-Rabin controls and educational notes">
+					<section class="card intro-card">
+						<h2>Miller-Rabin Primality Testing</h2>
+						<p>Analyze witness rounds, modular exponentiation checkpoints, and confidence growth in probabilistic primality testing.</p>
+					</section>
+
+					<section class="card controls-card" aria-label="Miller-Rabin controls">
+						<h3>Controls</h3>
+
+						<div class="control-group">
+							<label for="mr-custom-input">Custom input</label>
+							<textarea id="mr-custom-input" name="mr-custom-input" rows="3" placeholder="Example: n = 561, rounds = 8"></textarea>
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Preset examples</p>
+							<div class="preset-buttons" role="group" aria-label="Miller-Rabin preset examples">
+								<button type="button" id="mr-preset-prime">Large Known Prime</button>
+								<button type="button" id="mr-preset-carmichael">Carmichael Number</button>
+								<button type="button" id="mr-preset-composite">Random Composite</button>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label for="mr-speed-slider">Speed</label>
+							<input type="range" id="mr-speed-slider" name="mr-speed-slider" min="1" max="100" value="60">
+						</div>
+
+						<div class="control-group">
+							<p class="group-label">Playback</p>
+							<div class="playback-buttons" role="group" aria-label="Miller-Rabin playback controls">
+								<button type="button" id="mr-build-btn">Build Steps</button>
+								<button type="button" id="mr-step-btn">Step</button>
+								<button type="button" id="mr-play-btn">Play</button>
+								<button type="button" id="mr-pause-btn">Pause</button>
+								<button type="button" id="mr-reset-btn">Reset</button>
+							</div>
+						</div>
+
+						<div class="status-row" aria-label="Miller-Rabin run status">
+							<span class="status-badge" id="mr-status-badge" aria-live="polite">Idle</span>
+							<span class="step-counter" id="mr-step-counter" aria-live="polite">Step 0 / 0</span>
+						</div>
+					</section>
+
+					<section class="card counters-card" aria-labelledby="mr-counters-title">
+						<h3 id="mr-counters-title">Live Counters</h3>
+						<dl class="metric-grid" id="mr-live-counters">
+							<dt>Rounds</dt>
+							<dd id="mr-counter-rounds">0</dd>
+							<dt>Witnesses</dt>
+							<dd id="mr-counter-witnesses">0</dd>
+							<dt>Confidence</dt>
+							<dd id="mr-counter-confidence">0%</dd>
+						</dl>
+					</section>
+
+					<section class="card pseudocode-card" aria-labelledby="mr-pseudocode-title">
+						<h3 id="mr-pseudocode-title">Pseudocode</h3>
+						<pre id="mr-pseudocode" aria-live="polite">Pseudocode will appear when the Miller-Rabin module is connected.</pre>
+					</section>
+
+					<section class="card explanation-card" aria-labelledby="mr-explanation-title">
+						<h3 id="mr-explanation-title">Step Explanation</h3>
+						<p id="mr-step-explanation" aria-live="polite">Build steps to begin the guided explanation.</p>
+					</section>
+
+					<section class="card history-card" aria-labelledby="mr-history-title">
+						<h3 id="mr-history-title">History Table</h3>
+						<div class="table-wrap">
+							<table>
+								<thead>
+									<tr>
+										<th scope="col">Step</th>
+										<th scope="col">Operation</th>
+										<th scope="col">State Snapshot</th>
+									</tr>
+								</thead>
+								<tbody id="mr-history-body">
+									<tr>
+										<td colspan="3">No events recorded yet.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+					<details class="card collapsible-card" id="mr-overview-card" open>
+						<summary>Overview</summary>
+						<p>Miller-Rabin tests compositeness using random witnesses and repeated squaring under modular arithmetic rules.</p>
+					</details>
+
+					<details class="card collapsible-card" id="mr-example-card">
+						<summary>Worked Example</summary>
+						<p>Choose a candidate and rounds count, then inspect each witness decision in the generated trace.</p>
+					</details>
+
+					<section class="card key-concepts-card" aria-labelledby="mr-concepts-title">
+						<h3 id="mr-concepts-title">Key Concepts</h3>
+						<ul>
+							<li>Witness-based compositeness checks</li>
+							<li>Modular exponentiation pathway</li>
+							<li>Probabilistic confidence bounds</li>
+						</ul>
+					</section>
+				</aside>
+
+				<section class="visualization-panel" aria-label="Miller-Rabin visualization panel">
+					<article class="card visualization-card">
+						<header class="visualization-header">
+							<h3>Visualization</h3>
+							<p>Witness timeline, modular checkpoints, and round outcomes.</p>
+						</header>
+
+						<div class="svg-placeholder" aria-label="Miller-Rabin SVG area">
+							<svg id="mr-svg" viewBox="0 0 960 560" role="img" aria-labelledby="mr-svg-title mr-svg-desc">
+								<title id="mr-svg-title">Miller-Rabin visualization placeholder</title>
+								<desc id="mr-svg-desc">Reserved drawing surface for the Miller-Rabin visualization.</desc>
+								<rect x="0" y="0" width="960" height="560"></rect>
+								<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">Miller-Rabin SVG Placeholder</text>
+							</svg>
+						</div>
+
+						<section class="legend-area" aria-label="Miller-Rabin legend">
+							<h4>Legend</h4>
+							<ul>
+								<li><span class="legend-swatch swatch-idle" aria-hidden="true"></span>Untested state</li>
+								<li><span class="legend-swatch swatch-active" aria-hidden="true"></span>Active witness round</li>
+								<li><span class="legend-swatch swatch-swap" aria-hidden="true"></span>Composite indicator</li>
+							</ul>
+						</section>
+					</article>
+				</section>
+			</div>
+		</section>
+		</section>
+	</main>
+</body>
+</html>
