@@ -38,6 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		historyBody: document.getElementById("bitonic-history-body"),
 		visualAction: document.getElementById("bitonic-visual-action"),
 
+		infoStrip: document.getElementById("bitonic-info-strip"),
+		infoAction: document.getElementById("bitonic-info-action"),
+		infoComparator: document.getElementById("bitonic-info-comparator"),
+		infoValues: document.getElementById("bitonic-info-values"),
+		infoStage: document.getElementById("bitonic-info-stage"),
+
 		svg: document.getElementById("bitonic-svg"),
 
 		zeroOneSize: document.getElementById("bitonic-zero-one-size"),
@@ -74,6 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		"explanation",
 		"historyBody",
 		"visualAction",
+		"infoStrip",
+		"infoAction",
+		"infoComparator",
+		"infoValues",
+		"infoStage",
 		"svg",
 		"zeroOneSize",
 		"zeroOneRun",
@@ -203,6 +214,41 @@ document.addEventListener("DOMContentLoaded", () => {
 			return;
 		}
 		el.visualAction.textContent = text;
+	}
+
+	function updateInfoStrip(step) {
+		if (!step || step.type !== "compare") {
+			el.infoAction.textContent = "—";
+			el.infoComparator.textContent = "—";
+			el.infoValues.textContent = "—";
+			el.infoStage.textContent = "—";
+			return;
+		}
+
+		const cmpStr = step.comparator ? `i${step.comparator.i} ↔ i${step.comparator.j}` : "—";
+		const valStr = step.comparedValues ? `${formatNumber(step.comparedValues.left)} vs ${formatNumber(step.comparedValues.right)}` : "—";
+		const actionStr = step.swapped ? "SWAP" : "NO SWAP";
+		const dirStr = (step.directionText || "ascending").toUpperCase();
+		const stageStr = step.stageMeta ? `S${step.stageIndex + 1} | block ${step.blockSize}, distance ${step.compareDistance}` : "—";
+
+		el.infoAction.textContent = `${dirStr} → ${actionStr}`;
+		el.infoComparator.textContent = cmpStr;
+		el.infoValues.textContent = valStr;
+		el.infoStage.textContent = stageStr;
+	}
+
+	function getTokenX(step, canvasLeft, stageGap, canvasRight) {
+		const depth = state.network.depth;
+		if (!state.network || step.type === "init") {
+			return canvasLeft;
+		}
+		if (step.type === "done") {
+			return canvasRight;
+		}
+		if (step.stageIndex < 0) {
+			return canvasLeft;
+		}
+		return canvasLeft + step.stageIndex * stageGap + stageGap / 2;
 	}
 
 	function renderPseudocode(activeLine) {
@@ -375,6 +421,13 @@ document.addEventListener("DOMContentLoaded", () => {
 					pseudoLine: wantsAscending ? 10 : 11,
 					explanation: `Stage ${stageIndex + 1}, compare ${pairText} in ${directionText} direction. ${actionText}`,
 					bitonicNote: bitonicStageNote(meta),
+					// Animation metadata
+					animationPhase: "transition",
+					blockStart: groupStart,
+					blockSize: meta.blockSize,
+					compareDistance: meta.distance,
+					stageLabel: `S${stageIndex + 1}`,
+					actionType: shouldSwap ? "swap" : "compare",
 				});
 			});
 		});
@@ -596,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			y: top - 34,
 			class: "axis-caption",
 		});
-		rightCaption.textContent = "Current output";
+		rightCaption.textContent = step.type === "done" ? "Final output" : "Current state";
 		el.svg.appendChild(rightCaption);
 
 		for (let stageIndex = 0; stageIndex < depth; stageIndex += 1) {
@@ -661,7 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			el.svg.appendChild(stageLabel);
 		}
 
-		for (let wire = 0; wire < n; wire += 1) {
+		for (let i = 0; i < n; i += 1) {
 			const isActiveWire =
 				step.comparator && (wire === step.comparator.i || wire === step.comparator.j) && step.type === "compare";
 
@@ -799,62 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			el.svg.appendChild(tokenText);
 		}
 
-		if (step.type === "compare" && step.comparator && step.comparedValues) {
-			const activeX = left + step.stageIndex * stageGap + stageGap / 2;
-			const activeY = (yOf(step.comparator.i) + yOf(step.comparator.j)) / 2;
-			const chipWidth = 172;
-			const chipHeight = 60;
-			let chipX = activeX + 48;
-			if (chipX + chipWidth > width - 8) {
-				chipX = activeX - chipWidth - 48;
-			}
-			chipX = clamp(chipX, 8, width - chipWidth - 8);
-			const chipY = clamp(activeY - chipHeight / 2, top - 14, height - bottom - chipHeight + 14);
-
-			const link = createSvgNode("line", {
-				x1: activeX + (chipX > activeX ? 8 : -8),
-				y1: activeY,
-				x2: chipX + (chipX > activeX ? 0 : chipWidth),
-				y2: chipY + chipHeight / 2,
-				stroke: step.swapped ? "rgba(239, 102, 102, 0.62)" : "rgba(34, 184, 207, 0.62)",
-				"stroke-width": 1.4,
-			});
-			el.svg.appendChild(link);
-
-			const chip = createSvgNode("rect", {
-				x: chipX,
-				y: chipY,
-				width: chipWidth,
-				height: chipHeight,
-				rx: 8,
-				class: step.swapped ? "active-value-chip-bg swap" : "active-value-chip-bg",
-			});
-			el.svg.appendChild(chip);
-
-			const chipTitle = createSvgNode("text", {
-				x: chipX + 10,
-				y: chipY + 14,
-				class: "active-value-chip-title",
-			});
-			chipTitle.textContent = `Comparator i${step.comparator.i} vs i${step.comparator.j}`;
-			el.svg.appendChild(chipTitle);
-
-			const chipMain = createSvgNode("text", {
-				x: chipX + 10,
-				y: chipY + 33,
-				class: "active-value-chip-main",
-			});
-			chipMain.textContent = `${formatNumber(step.comparedValues.left)} vs ${formatNumber(step.comparedValues.right)}`;
-			el.svg.appendChild(chipMain);
-
-			const chipDetail = createSvgNode("text", {
-				x: chipX + 10,
-				y: chipY + 49,
-				class: step.swapped ? "active-value-chip-detail swap" : "active-value-chip-detail",
-			});
-			chipDetail.textContent = `${step.directionText.toUpperCase()} | ${step.swapped ? "SWAP" : "NO SWAP"}`;
-			el.svg.appendChild(chipDetail);
-		}
+		// Floating comparator chip removed - info now displayed in dedicated info strip above SVG
 	}
 
 	function updateHistory() {
@@ -948,6 +946,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				swapped: false,
 			});
 			setVisualAction("Build steps to begin comparator-by-comparator guidance.");
+			updateInfoStrip(null);
 			updateHistory();
 			return;
 		}
@@ -958,6 +957,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		updateCounters(step);
 		renderNetwork(step);
 		setVisualAction(getCurrentActionSummary(step));
+		updateInfoStrip(step);
 		updateHistory();
 	}
 

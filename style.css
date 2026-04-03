@@ -33,7 +33,8 @@
 	--control-width: 420px;
 	--content-max: 1520px;
 	--workspace-sticky-top: 1rem;
-	--workspace-column-height: clamp(620px, 78vh, 860px);
+	/* full-height columns matching viewport (less nav padding) */
+	--workspace-column-height: calc(100vh - 6.2rem);
 	--transition-fast: 160ms ease;
 	--transition-base: 260ms ease;
 }
@@ -326,14 +327,17 @@ ul {
 }
 
 .control-panel {
-	height: var(--workspace-column-height);
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	height: 100%;
 	overflow: hidden;
 }
 
 .control-panel-scroll {
 	display: grid;
 	gap: var(--space-md);
-	height: 100%;
+	flex: 1;
 	overflow-y: auto;
 	overflow-x: hidden;
 	padding-right: 1.1rem;
@@ -371,10 +375,9 @@ ul {
 }
 
 .visualization-panel {
-	height: var(--workspace-column-height);
-	position: sticky;
-	top: var(--workspace-sticky-top);
-	align-self: start;
+	min-height: 100%;
+	position: static;
+	align-self: stretch;
 }
 
 .card {
@@ -729,18 +732,22 @@ tbody tr:last-child td {
 }
 
 .visualization-panel {
-	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	min-height: var(--workspace-column-height);
+	height: var(--workspace-column-height);
+	position: static;
+	top: auto;
 }
 
 .visualization-card {
-	min-height: 0;
-	height: 100%;
+	min-height: 1000;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
 	gap: var(--space-md);
 	padding: var(--space-lg);
 	background: linear-gradient(180deg, var(--panel-strong), rgba(13, 24, 39, 0.95));
-	overflow: hidden;
+	overflow: visible;
 }
 
 .workspace-open .landing-view {
@@ -761,6 +768,42 @@ tbody tr:last-child td {
 	color: #d8edff;
 	font-size: 0.88rem;
 	line-height: 1.35;
+}
+
+.bitonic-info-strip {
+	margin: 0.5rem 0 0.75rem 0;
+	padding: 0.65rem 0.88rem;
+	border-radius: 0.6rem;
+	border: 1px solid rgba(80, 160, 207, 0.28);
+	background: rgba(12, 28, 42, 0.75);
+	font-size: 0.83rem;
+	line-height: 1.5;
+}
+
+.info-strip-content {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.2rem 1.8rem;
+	align-items: center;
+}
+
+.info-item {
+	display: flex;
+	align-items: center;
+	gap: 0.48rem;
+}
+
+.info-label {
+	font-weight: 680;
+	color: rgba(168, 205, 237, 0.92);
+	white-space: nowrap;
+}
+
+.info-value {
+	font-weight: 700;
+	color: rgba(200, 240, 255, 0.98);
+	font-family: "Courier New", monospace;
+	letter-spacing: -0.4px;
 }
 
 .svg-placeholder {
@@ -869,71 +912,93 @@ tbody tr:last-child td {
 }
 
 #bitonic-svg .wire-label {
-	fill: rgba(210, 228, 246, 0.96);
+	fill: rgba(210, 228, 246, 0.98);
 	font-size: 13px;
-	font-weight: 700;
+	font-weight: 720;
+	letter-spacing: 0.2px;
 }
 
 #bitonic-svg .stage-label {
-	fill: rgba(215, 233, 250, 0.88);
-	font-size: 14px;
-	font-weight: 680;
+	fill: rgba(215, 233, 250, 0.92);
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 0.3px;
 }
 
 #bitonic-svg .stage-label.current {
 	fill: rgba(193, 245, 255, 0.98);
+	font-weight: 720;
+	font-size: 16px;
 }
 
 #bitonic-svg .stage-subtitle {
-	fill: rgba(168, 213, 235, 0.92);
-	font-size: 12px;
-	font-weight: 560;
+	fill: rgba(168, 213, 235, 0.94);
+	font-size: 13px;
+	font-weight: 590;
+	letter-spacing: 0.15px;
 }
 
 #bitonic-svg .axis-caption {
-	fill: rgba(168, 205, 237, 0.9);
-	font-size: 12px;
-	font-weight: 640;
+	fill: rgba(168, 205, 237, 0.96);
+	font-size: 13px;
+	font-weight: 660;
+	letter-spacing: 0.1px;
 }
 
 #bitonic-svg .input-value,
 #bitonic-svg .output-value {
 	fill: #ecf6ff;
-	font-size: 13px;
-	font-weight: 690;
+	font-size: 14px;
+	font-weight: 710;
+	letter-spacing: -0.3px;
 }
 
 #bitonic-svg .value-tag-bg {
-	fill: rgba(11, 22, 34, 0.85);
-	stroke: rgba(121, 160, 195, 0.36);
-	stroke-width: 1;
+	fill: rgba(11, 22, 34, 0.88);
+	stroke: rgba(121, 160, 195, 0.44);
+	stroke-width: 1.1;
 }
 
 #bitonic-svg .value-tag-bg.input {
-	fill: rgba(16, 30, 46, 0.9);
+	fill: rgba(16, 30, 46, 0.92);
+	stroke: rgba(100, 150, 200, 0.48);
 }
 
 #bitonic-svg .value-tag-bg.output {
-	fill: rgba(15, 31, 42, 0.92);
+	fill: rgba(15, 31, 42, 0.94);
+	stroke: rgba(80, 180, 220, 0.44);
 }
 
 #bitonic-svg .value-tag-bg.output.done {
-	fill: rgba(31, 77, 62, 0.72);
-	stroke: rgba(88, 220, 165, 0.5);
+	fill: rgba(31, 77, 62, 0.76);
+	stroke: rgba(88, 220, 165, 0.62);
+	animation: output-complete 0.35s ease-out;
+}
+
+@keyframes output-complete {
+	0% {
+		fill: rgba(15, 31, 42, 0.94);
+		stroke: rgba(80, 180, 220, 0.44);
+	}
+	100% {
+		fill: rgba(31, 77, 62, 0.76);
+		stroke: rgba(88, 220, 165, 0.62);
+	}
 }
 
 #bitonic-svg .moving-token {
-	fill: rgba(34, 184, 207, 0.28);
+	fill: rgba(34, 184, 207, 0.35);
 	stroke: rgba(91, 220, 240, 0.96);
-	stroke-width: 1.5;
+	stroke-width: 1.8;
 }
 
 #bitonic-svg .moving-token-text {
-	fill: #ebf8ff;
-	font-size: 12px;
-	font-weight: 700;
+	fill: #f0fbff;
+	font-size: 13px;
+	font-weight: 720;
 	text-anchor: middle;
 	dominant-baseline: middle;
+	letter-spacing: -0.4px;
 }
 
 #bitonic-svg .active-value-chip-bg {
@@ -979,9 +1044,10 @@ tbody tr:last-child td {
 }
 
 #bitonic-svg .group-label {
-	fill: rgba(173, 219, 240, 0.84);
-	font-size: 10px;
-	font-weight: 620;
+	fill: rgba(173, 219, 240, 0.92);
+	font-size: 11px;
+	font-weight: 640;
+	letter-spacing: 0.1px;
 }
 
 .svg-placeholder rect {
@@ -1056,6 +1122,113 @@ tbody tr:last-child td {
 
 .swatch-stage {
 	background: rgba(34, 184, 207, 0.45);
+}
+
+.swatch-sorted {
+	background: rgba(80, 209, 153, 0.72);
+}
+
+/* Animation keyframes for Bitonic value chip transitions and stage progression */
+
+@keyframes swap-crossing {
+	0% {
+		opacity: 1;
+		filter: drop-shadow(0 0 3px rgba(34, 184, 207, 0.6));
+	}
+	40% {
+		opacity: 1;
+		filter: drop-shadow(0 0 8px rgba(34, 184, 207, 0.8));
+	}
+	60% {
+		opacity: 1;
+		filter: drop-shadow(0 0 8px rgba(239, 102, 102, 0.8));
+	}
+	100% {
+		opacity: 1;
+		filter: drop-shadow(0 0 3px rgba(239, 102, 102, 0.6));
+	}
+}
+
+@keyframes no-swap-pulse {
+	0% {
+		opacity: 0.5;
+		filter: drop-shadow(0 0 2px rgba(34, 184, 207, 0.4));
+	}
+	50% {
+		opacity: 1;
+		filter: drop-shadow(0 0 6px rgba(34, 184, 207, 0.7));
+	}
+	100% {
+		opacity: 0.5;
+		filter: drop-shadow(0 0 2px rgba(34, 184, 207, 0.4));
+	}
+}
+
+@keyframes stage-highlight-fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes comparator-activate {
+	0% {
+		stroke-width: 2;
+		opacity: 0.5;
+	}
+	100% {
+		stroke-width: 4.4;
+		opacity: 1;
+	}
+}
+
+#bitonic-svg.is-playing .moving-token {
+	animation: value-flow 0.48s ease-in-out;
+}
+
+@keyframes value-flow {
+	0% {
+		opacity: 0.6;
+		filter: drop-shadow(0 0 2px rgba(34, 184, 207, 0.3));
+	}
+	50% {
+		opacity: 1;
+		filter: drop-shadow(0 0 4px rgba(34, 184, 207, 0.6));
+	}
+	100% {
+		opacity: 0.8;
+		filter: drop-shadow(0 0 3px rgba(34, 184, 207, 0.4));
+	}
+}
+
+#bitonic-svg .bitonic-comparator.active.swap {
+	animation: swap-crossing 0.35s ease-out;
+}
+
+#bitonic-svg .bitonic-comparator.active:not(.swap) {
+	animation: no-swap-pulse 0.28s ease-in-out;
+}
+
+#bitonic-svg .stage-band.current {
+	animation: stage-highlight-fade-in 0.22s ease-out;
+}
+
+/* Enhanced stage transition styling for phased animation */
+#bitonic-svg .bitonic-comparator-glow.swap {
+	animation: glow-intensify 0.35s ease-out;
+}
+
+@keyframes glow-intensify {
+	0% {
+		stroke: rgba(239, 102, 102, 0.1);
+		stroke-width: 6;
+	}
+	100% {
+		stroke: rgba(239, 102, 102, 0.28);
+		stroke-width: 10;
+	}
 }
 
 .swatch-sorted {
